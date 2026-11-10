@@ -489,7 +489,7 @@ function renderCard(company, state) {
   const verified = card.querySelector('.verified');
   verified.dateTime = company.last_verified;
   verified.textContent = checkedLabel(company.last_verified);
-  verified.title = `Last checked by hand on ${company.last_verified}`;
+  verified.title = `Last verified on ${company.last_verified}`;
   if (company.last_verified < staleCutoff) {
     verified.classList.add('stale');
     verified.title += `, more than ${STALE_MONTHS} months ago`;

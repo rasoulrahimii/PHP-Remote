@@ -2,7 +2,7 @@
 
 # Remote PHP Jobs
 
-A list of companies that hire remote PHP developers, checked by hand.
+A list of companies that hire remote PHP developers, each verified on its own careers page.
 
 [![Browse the list](https://img.shields.io/badge/Browse_the_list-rasoulrahimii.github.io-5b5bd6?style=for-the-badge)](https://rasoulrahimii.github.io/PHP-Remote/)
 
