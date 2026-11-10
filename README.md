@@ -27,11 +27,13 @@ Every company on the list:
 
 Open **[rasoulrahimii.github.io/PHP-Remote-Jobs](https://rasoulrahimii.github.io/PHP-Remote-Jobs/)**.
 
-- **Remote region**: show only companies that hire where you live.
-- **Hiring now**: show only companies with an open PHP role.
-- **Search**: find a company, industry or benefit. Press <kbd>/</kbd> to jump to the search box.
-- **Open roles →**: go to the company's careers page.
-- **Share**: your filters are saved in the page address, so you can bookmark or share a search.
+- **I live in**: pick your country to see only companies that can hire you there. Companies with no region limit are always included.
+- **Hiring now**: show only companies with an open PHP role. Companies with open roles are listed first.
+- **Search**: find a company, industry or benefit. Press <kbd>/</kbd> to jump to the search box and <kbd>Esc</kbd> to clear it.
+- **Industry tags**: click a tag on a card to see more companies in that industry.
+- **Cards or list**: switch to the list view to scan every company quickly.
+- **See open roles →**: go to the company's careers page.
+- **Copy link**: your filters are saved in the page address, so you can bookmark or share a search.
 
 <div align="center">
   <picture>
