@@ -55,7 +55,7 @@ All company data lives in [`companies.yml`](companies.yml). The website is gener
 | `location`      | No       | Where the remote role is open, when it is limited to a region, for example `USA`, `EU` or `Worldwide except USA`. Use countries or regions, not cities. Leave it out when the company hires remotely from anywhere. |
 | `industries`    | Yes      | One or more industries, as a list.                                               |
 | `benefits`      | No       | Notable benefits, one per list item. Leave the field out if you do not know any. |
-| `linkedin`      | Yes      | The company's LinkedIn jobs page.                                                |
+| `linkedin`      | No       | The company's LinkedIn jobs page. Leave it out only when the company has no LinkedIn page. |
 | `glassdoor`     | No       | The company's Glassdoor overview page, using `glassdoor.com`.                     |
 | `last_verified` | Yes      | The date you checked the criteria above, as `YYYY-MM-DD`.                        |
 
