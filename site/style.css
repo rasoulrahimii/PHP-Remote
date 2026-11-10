@@ -1573,15 +1573,23 @@ button {
 }
 
 .newsletter-form .formkit-input {
-  flex: 1;
+  flex: 1 1 auto;
+  width: 100%;
   min-width: 0;
   height: 46px;
+  min-height: 46px;
+  box-sizing: border-box;
+  font-size: 1rem;
   padding: 0 16px;
   border: 1px solid var(--border-strong);
   border-radius: 999px;
   background: var(--bg);
   color: var(--text);
   font: inherit;
+}
+
+.newsletter-form .formkit-input::placeholder {
+  color: var(--muted);
 }
 
 .newsletter-form .formkit-input:focus-visible {
@@ -1698,6 +1706,59 @@ button {
 
 .to-top[hidden] {
   display: none;
+}
+
+.telegram-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+  padding: 10px 14px 10px 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  text-decoration: none;
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.telegram-link:hover {
+  border-color: #2aabee;
+  box-shadow: 0 6px 18px rgba(42, 171, 238, 0.22);
+  transform: translateY(-1px);
+}
+
+.telegram-icon {
+  flex: none;
+  width: 34px;
+  height: 34px;
+}
+
+.telegram-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.telegram-text strong {
+  font-size: 0.92rem;
+}
+
+.telegram-text span {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.telegram-link .arrow {
+  margin-left: auto;
+  color: #2aabee;
+  font-weight: 700;
+  transition: transform 0.2s ease;
+}
+
+.telegram-link:hover .arrow {
+  transform: translateX(3px);
 }
 
 /* ---- Subscription confirmation page ---- */
@@ -1929,6 +1990,16 @@ button {
 
   .newsletter-fields {
     flex-direction: column;
+  }
+
+  .newsletter-form .formkit-input,
+  .newsletter-form .formkit-submit {
+    flex: none;
+    width: 100%;
+  }
+
+  .newsletter-text {
+    flex-basis: 100%;
   }
 
   .confirm-card,
