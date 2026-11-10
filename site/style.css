@@ -1347,7 +1347,7 @@ button {
   align-items: center;
   justify-content: space-between;
   gap: 18px 32px;
-  margin: 0 0 20px;
+  margin: 0 0 56px;
   padding: 28px;
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -1468,7 +1468,7 @@ button {
 }
 
 .contribute {
-  margin: 0 0 56px;
+  margin: 0 0 20px;
   padding: 28px;
   border: 1px dashed var(--border-strong);
   border-radius: var(--radius);
