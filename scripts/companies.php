@@ -26,7 +26,7 @@ final class InvalidData extends RuntimeException
 }
 
 /**
- * @return list<array{name: string, url: string, status: string, location: ?string, industries: list<string>, benefits: list<string>, linkedin: string, glassdoor: ?string, last_verified: string}>
+ * @return list<array{name: string, url: string, status: string, location: ?string, industries: list<string>, benefits: list<string>, linkedin: ?string, glassdoor: ?string, last_verified: string}>
  */
 function loadCompanies(): array
 {
@@ -66,7 +66,7 @@ function loadCompanies(): array
 
 /**
  * @param list<string> $errors
- * @return ?array{name: string, url: string, status: string, location: ?string, industries: list<string>, benefits: list<string>, linkedin: string, glassdoor: ?string, last_verified: string}
+ * @return ?array{name: string, url: string, status: string, location: ?string, industries: list<string>, benefits: list<string>, linkedin: ?string, glassdoor: ?string, last_verified: string}
  */
 function normalizeCompany(mixed $entry, string $label, array &$errors): ?array
 {
@@ -89,7 +89,7 @@ function normalizeCompany(mixed $entry, string $label, array &$errors): ?array
         'location' => isset($entry['location']) ? text($entry, 'location', $label, $errors) : null,
         'industries' => textList($entry, 'industries', $label, $errors, true),
         'benefits' => textList($entry, 'benefits', $label, $errors, false),
-        'linkedin' => url($entry, 'linkedin', $label, $errors, true),
+        'linkedin' => url($entry, 'linkedin', $label, $errors, false),
         'glassdoor' => url($entry, 'glassdoor', $label, $errors, false),
         'last_verified' => verifiedDate($entry, $label, $errors),
     ];
@@ -222,6 +222,9 @@ function findDuplicates(array $companies): array
     foreach (['name', 'url', 'linkedin'] as $field) {
         $seen = [];
         foreach ($companies as $company) {
+            if ($company[$field] === null) {
+                continue;
+            }
             $key = strtolower(rtrim($company[$field], '/'));
             if (isset($seen[$key])) {
                 $errors[] = sprintf('Duplicate %s "%s" in "%s" and "%s".', $field, $company[$field], $seen[$key], $company['name']);

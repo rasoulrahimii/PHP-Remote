@@ -133,7 +133,7 @@
 
 - name: Evolution Collect
   url: https://evolutioncollect.com/
-  status: no-active-openings
+  status: hiring
   location: USA
   industries:
     - Fintech
@@ -337,7 +337,7 @@
 
 - name: Optimizee Group
   url: https://optimizeegroup.com/home/jobs/
-  status: no-active-openings
+  status: hiring
   location: Worldwide except USA
   industries:
     - Fintech
@@ -630,4 +630,32 @@
     - Team buildings abroad
   linkedin: https://www.linkedin.com/company/exads/jobs/
   glassdoor: https://www.glassdoor.com/Overview/Working-at-EXADS-EI_IE2158825.11,16.htm
+  last_verified: 2026-11-10
+
+- name: Vaste
+  url: https://app.vaste.bio/careers
+  status: hiring
+  location: UK
+  industries:
+    - Waste Management
+    - Compliance
+    - SaaS
+  linkedin: https://www.linkedin.com/company/vastexchange/jobs/
+  last_verified: 2026-11-10
+
+- name: Fans API
+  url: https://fansapi.notion.site/Senior-Full-Stack-Engineer-FansAPI-com-3d12f91f226b8032ae90ca0a41c1a4a3
+  status: hiring
+  industries:
+    - Developer Tools
+    - API
+  last_verified: 2026-11-10
+
+- name: ClickGo
+  url: https://clickgo.com/
+  status: hiring
+  industries:
+    - Affiliate Marketing
+    - Ad Tech
+  linkedin: https://www.linkedin.com/company/clickgo/jobs/
   last_verified: 2026-11-10
