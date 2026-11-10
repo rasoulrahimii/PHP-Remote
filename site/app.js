@@ -151,7 +151,6 @@ function readState() {
     industry: data.get('industry') || '',
     status: data.get('status') || '',
     sort: data.get('sort') || DEFAULT_SORT,
-    benefits: data.has('benefits'),
     recent: data.has('recent'),
   };
 }
@@ -163,7 +162,6 @@ function writeState(state) {
   if (state.industry) params.set('industry', state.industry);
   if (state.status) params.set('status', state.status);
   if (state.sort !== DEFAULT_SORT) params.set('sort', state.sort);
-  if (state.benefits) params.set('benefits', '1');
   if (state.recent) params.set('recent', '1');
   const query = params.toString();
   history.replaceState(null, '', query ? `?${query}` : location.pathname);
@@ -184,12 +182,11 @@ function restoreState() {
   if (params.get('hiring') === '1' || params.get('open') === '1') status = 'hiring';
   setStatus(['hiring', 'closed'].includes(status) ? status : '');
   form.sort.value = sorters[params.get('sort')] ? params.get('sort') : DEFAULT_SORT;
-  form.benefits.checked = params.get('benefits') === '1';
   form.recent.checked = params.get('recent') === '1';
 }
 
 function activeFilterCount(state) {
-  return [state.q, state.country, state.industry, state.status, state.benefits, state.recent].filter(Boolean).length;
+  return [state.q, state.country, state.industry, state.status, state.recent].filter(Boolean).length;
 }
 
 // ---- Options ---------------------------------------------------------------
@@ -366,7 +363,6 @@ function render(companies) {
     .filter((company) => !state.industry || company.industries.includes(state.industry))
     .filter((company) => state.status !== 'hiring' || company.status === HIRING)
     .filter((company) => state.status !== 'closed' || company.status === NO_OPENINGS)
-    .filter((company) => !state.benefits || company.benefits.length > 0)
     .filter((company) => !state.recent || company.last_verified >= staleCutoff)
     .filter((company) => terms.every((term) => company.search.includes(term)))
     .sort(sorters[state.sort]);
