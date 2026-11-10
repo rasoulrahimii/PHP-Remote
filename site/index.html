@@ -86,12 +86,19 @@
             <kbd class="shortcut" aria-hidden="true">/</kbd>
           </span>
         </label>
-        <label class="field">
-          <span class="field-label">I live in</span>
-          <select name="country">
-            <option value="">Anywhere</option>
-          </select>
-        </label>
+        <div class="field">
+          <label class="field-label" for="country-input" id="country-label">I live in</label>
+          <div class="combo" id="country-combo">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+            <input type="text" id="country-input" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="country-list" placeholder="Anywhere" autocomplete="off" spellcheck="false">
+            <button type="button" class="combo-clear" id="country-clear" aria-label="Clear country, show companies anywhere" hidden>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+            </button>
+            <svg class="combo-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            <ul class="combo-list" id="country-list" role="listbox" aria-labelledby="country-label" hidden></ul>
+            <input type="hidden" name="country">
+          </div>
+        </div>
         <button type="button" class="filters-toggle" id="filters-toggle" aria-expanded="false" aria-controls="more-filters">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
           Filters

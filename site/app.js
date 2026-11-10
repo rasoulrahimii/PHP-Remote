@@ -176,7 +176,7 @@ function restoreState() {
   form.q.value = params.get('q') || '';
   // Older links used "region"; keep them working when it names a country.
   const country = params.get('country') || params.get('region') || '';
-  form.country.value = COUNTRIES.has(country) ? country : '';
+  setCountry(country);
   form.industry.value = params.get('industry') || '';
   let status = params.get('status') || '';
   if (params.get('hiring') === '1' || params.get('open') === '1') status = 'hiring';
@@ -200,17 +200,196 @@ function fillIndustries(companies) {
   for (const name of names) form.industry.append(new Option(`${name} (${counts.get(name)})`, name));
 }
 
-function fillCountries(companies) {
-  for (const [group, countries] of COUNTRY_GROUPS) {
-    const optgroup = document.createElement('optgroup');
-    optgroup.label = group;
-    for (const [name] of countries) {
-      const country = COUNTRIES.get(name);
-      const count = companies.filter((company) => hiresIn(company.location, country)).length;
-      optgroup.append(new Option(`${name} (${count})`, name));
-    }
-    form.country.append(optgroup);
+// ---- Searchable country picker ---------------------------------------------
+
+const combo = {
+  input: document.getElementById('country-input'),
+  list: document.getElementById('country-list'),
+  clear: document.getElementById('country-clear'),
+  counts: new Map(),
+  options: [],
+  active: -1,
+};
+
+const fold = (text) => text.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+
+function setCountry(name, { notify = false } = {}) {
+  const value = COUNTRIES.has(name) ? name : '';
+  form.country.value = value;
+  combo.input.value = value;
+  combo.clear.hidden = !value;
+  if (notify) form.dispatchEvent(new Event('input'));
+}
+
+function countryMatches(query) {
+  const q = fold(query.trim());
+  const all = COUNTRY_GROUPS.flatMap(([group, countries]) => countries.map(([name]) => ({ group, country: COUNTRIES.get(name) })));
+  if (!q) return all;
+  const scored = [];
+  for (const entry of all) {
+    const words = entry.country.words.map(fold);
+    const name = words[0];
+    let score = null;
+    if (words.includes(q)) score = -1;
+    else if (name.startsWith(q)) score = 0;
+    else if (words.some((word) => word.startsWith(q))) score = 1;
+    else if (name.split(/\s+/).some((part) => part.startsWith(q))) score = 2;
+    else if (name.includes(q)) score = 3;
+    if (score !== null) scored.push({ ...entry, score });
   }
+  return scored.sort((a, b) => a.score - b.score || a.country.name.localeCompare(b.country.name));
+}
+
+function optionItem(id, label, count, value) {
+  const item = document.createElement('li');
+  item.id = id;
+  item.className = 'combo-option';
+  item.setAttribute('role', 'option');
+  item.dataset.value = value;
+  item.setAttribute('aria-selected', String(form.country.value === value));
+  const text = document.createElement('span');
+  text.textContent = label;
+  const badge = document.createElement('span');
+  badge.className = 'combo-count';
+  badge.textContent = count;
+  badge.setAttribute('aria-label', `${count} companies`);
+  item.append(text, badge);
+  return item;
+}
+
+function renderCountryList() {
+  const query = combo.input.value === form.country.value ? '' : combo.input.value;
+  const matches = countryMatches(query);
+  const items = [];
+  combo.options = [];
+  if (!query.trim()) {
+    const anywhere = optionItem('country-opt-any', 'Anywhere', combo.counts.get(''), '');
+    combo.options.push(anywhere);
+    items.push(anywhere);
+  }
+  let group = '';
+  matches.forEach((entry, index) => {
+    if (!query.trim() && entry.group !== group) {
+      group = entry.group;
+      const heading = document.createElement('li');
+      heading.className = 'combo-group';
+      heading.setAttribute('role', 'presentation');
+      heading.textContent = group;
+      items.push(heading);
+    }
+    const option = optionItem(`country-opt-${index}`, entry.country.name, combo.counts.get(entry.country.name), entry.country.name);
+    combo.options.push(option);
+    items.push(option);
+  });
+  if (combo.options.length === 0) {
+    const none = document.createElement('li');
+    none.className = 'combo-empty';
+    none.textContent = 'No country matches. Try another spelling.';
+    items.push(none);
+  }
+  combo.list.replaceChildren(...items);
+  const selected = combo.options.findIndex((option) => option.dataset.value === form.country.value);
+  setActive(query.trim() ? 0 : Math.max(selected, 0));
+}
+
+function setActive(index) {
+  combo.options.forEach((option) => option.classList.remove('active'));
+  combo.active = combo.options.length ? Math.max(0, Math.min(index, combo.options.length - 1)) : -1;
+  const option = combo.options[combo.active];
+  if (option) {
+    option.classList.add('active');
+    combo.input.setAttribute('aria-activedescendant', option.id);
+    option.scrollIntoView({ block: 'nearest' });
+  } else {
+    combo.input.removeAttribute('aria-activedescendant');
+  }
+}
+
+function openCountryList() {
+  if (!combo.list.hidden) return;
+  combo.list.hidden = false;
+  combo.input.setAttribute('aria-expanded', 'true');
+  renderCountryList();
+}
+
+function closeCountryList({ restore = true } = {}) {
+  combo.list.hidden = true;
+  combo.input.setAttribute('aria-expanded', 'false');
+  combo.input.removeAttribute('aria-activedescendant');
+  if (restore) combo.input.value = form.country.value;
+}
+
+function chooseCountry(option) {
+  setCountry(option.dataset.value, { notify: true });
+  closeCountryList();
+}
+
+function setupCountryPicker(companies) {
+  combo.counts.set('', companies.length);
+  for (const country of COUNTRIES.values()) {
+    combo.counts.set(country.name, companies.filter((company) => hiresIn(company.location, country)).length);
+  }
+
+  combo.input.addEventListener('focus', () => {
+    combo.input.select();
+    openCountryList();
+  });
+  combo.input.addEventListener('click', openCountryList);
+  combo.input.addEventListener('input', (event) => {
+    event.stopPropagation();
+    if (combo.list.hidden) {
+      combo.list.hidden = false;
+      combo.input.setAttribute('aria-expanded', 'true');
+    }
+    renderCountryList();
+  });
+  combo.input.addEventListener('keydown', (event) => {
+    const open = !combo.list.hidden;
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      if (!open) return openCountryList();
+      setActive(combo.active + (event.key === 'ArrowDown' ? 1 : -1));
+    } else if (event.key === 'Enter') {
+      event.preventDefault();
+      if (open && combo.options[combo.active]) chooseCountry(combo.options[combo.active]);
+    } else if (event.key === 'Escape') {
+      if (open) {
+        event.preventDefault();
+        closeCountryList();
+      } else if (form.country.value) {
+        setCountry('', { notify: true });
+      }
+    } else if (event.key === 'Tab' && open) {
+      closeCountryList();
+    }
+  });
+  combo.input.addEventListener('blur', () => {
+    // Let a click on an option land before closing.
+    setTimeout(() => {
+      if (document.activeElement !== combo.input) closeCountryList();
+    }, 120);
+  });
+
+  combo.list.addEventListener('mousedown', (event) => event.preventDefault());
+  combo.list.addEventListener('click', (event) => {
+    const option = event.target.closest('.combo-option');
+    if (option) chooseCountry(option);
+  });
+  combo.list.addEventListener('mousemove', (event) => {
+    const option = event.target.closest('.combo-option');
+    const index = combo.options.indexOf(option);
+    if (index >= 0 && index !== combo.active) {
+      combo.options.forEach((item) => item.classList.remove('active'));
+      option.classList.add('active');
+      combo.active = index;
+      combo.input.setAttribute('aria-activedescendant', option.id);
+    }
+  });
+
+  combo.clear.addEventListener('click', () => {
+    setCountry('', { notify: true });
+    combo.input.focus();
+  });
 }
 
 function fillStats(companies) {
@@ -390,6 +569,7 @@ function clearFilters() {
   const sort = form.sort.value;
   form.reset();
   form.sort.value = sort;
+  setCountry('');
   form.dispatchEvent(new Event('input'));
 }
 
@@ -536,7 +716,7 @@ async function main() {
 
     fillStats(companies);
     fillIndustries(companies);
-    fillCountries(companies);
+    setupCountryPicker(companies);
     restoreState();
     form.addEventListener('input', () => render(companies));
     form.addEventListener('submit', (event) => event.preventDefault());
