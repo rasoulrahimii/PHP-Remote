@@ -676,6 +676,174 @@ button {
   display: none;
 }
 
+/* Searchable country picker */
+
+.combo {
+  position: relative;
+}
+
+.combo input {
+  padding-left: 40px;
+  padding-right: 66px;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.combo input:focus {
+  cursor: text;
+}
+
+.combo input::placeholder {
+  color: var(--text);
+  opacity: 1;
+}
+
+.combo input:focus::placeholder {
+  color: var(--muted);
+}
+
+.combo-caret {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  width: 18px;
+  height: 18px;
+  color: var(--muted);
+  transform: translateY(-50%);
+  transition: transform 0.2s ease;
+  pointer-events: none;
+}
+
+.combo input[aria-expanded="true"] ~ .combo-caret {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.combo-clear {
+  position: absolute;
+  top: 50%;
+  right: 34px;
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.combo-clear svg {
+  width: 15px;
+  height: 15px;
+}
+
+.combo-clear:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.combo-clear[hidden] {
+  display: none;
+}
+
+.combo-list {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 30;
+  min-width: 240px;
+  max-height: min(340px, 55vh);
+  margin: 0;
+  padding: 6px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  box-shadow: var(--shadow-md);
+  list-style: none;
+}
+
+.combo-list[hidden] {
+  display: none;
+}
+
+.combo-group {
+  position: sticky;
+  top: -6px;
+  z-index: 1;
+  margin: 4px -6px 0;
+  padding: 8px 16px 4px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.combo-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 10px;
+  border-radius: 7px;
+  color: var(--text);
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.combo-option.active {
+  background: var(--accent-soft);
+  color: var(--accent-soft-text);
+}
+
+.combo-option[aria-selected="true"] {
+  font-weight: 600;
+}
+
+.combo-option[aria-selected="true"]::after {
+  content: "";
+  order: 1;
+  width: 16px;
+  height: 16px;
+  margin-left: -4px;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.combo-option span:first-child {
+  flex: 1;
+}
+
+.combo-count {
+  min-width: 28px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--chip-bg);
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.combo-option.active .combo-count {
+  background: var(--surface);
+}
+
+.combo-empty {
+  padding: 14px 10px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
 .segmented {
   display: inline-flex;
   gap: 2px;
