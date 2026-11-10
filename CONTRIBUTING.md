@@ -13,7 +13,7 @@ A company can be added when all of these are true:
 
 ## Suggest a company without writing code
 
-Open a [Suggest a company](https://github.com/rasoulrahimii/PHP-Remote-Jobs/issues/new?template=suggest-company.yml) issue and fill in the form. A maintainer will add the entry.
+Open a [Suggest a company](https://github.com/rasoulrahimii/PHP-Remote/issues/new?template=suggest-company.yml) issue and fill in the form. A maintainer will add the entry.
 
 ## Add a company with a pull request
 
@@ -69,7 +69,7 @@ Once a week, a workflow opens (or updates) an issue labelled `stale-entries` tha
 
 ## Report a dead link or a stale company
 
-Open a [Report a problem](https://github.com/rasoulrahimii/PHP-Remote-Jobs/issues/new?template=report-problem.yml) issue. A weekly link check also opens an issue labelled `broken-links` when a careers page stops responding.
+Open a [Report a problem](https://github.com/rasoulrahimii/PHP-Remote/issues/new?template=report-problem.yml) issue. A weekly link check also opens an issue labelled `broken-links` when a careers page stops responding.
 
 The link check skips LinkedIn, Glassdoor, FlexJobs and Remote.co because they block automated requests. Problems with those links need to be reported by hand.
 

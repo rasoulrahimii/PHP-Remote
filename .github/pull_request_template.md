@@ -1,4 +1,4 @@
-Please read [CONTRIBUTING.md](https://github.com/rasoulrahimii/PHP-Remote-Jobs/blob/main/CONTRIBUTING.md) before opening a pull request.
+Please read [CONTRIBUTING.md](https://github.com/rasoulrahimii/PHP-Remote/blob/main/CONTRIBUTING.md) before opening a pull request.
 
 ## Change
 
