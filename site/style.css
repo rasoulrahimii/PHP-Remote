@@ -1269,7 +1269,7 @@ button {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 10px 12px;
+  gap: 8px;
   margin-top: auto;
   padding-top: 14px;
   border-top: 1px solid var(--border);
@@ -1318,15 +1318,15 @@ button {
 
 .links {
   display: flex;
-  gap: 4px;
+  gap: 0;
   margin-right: auto;
 }
 
 .icon-link {
   display: inline-grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   border-radius: 8px;
   color: var(--muted);
   transition: background-color 0.2s ease, color 0.2s ease;
@@ -1344,7 +1344,8 @@ button {
 
 .verified {
   color: var(--muted);
-  font-size: 0.8rem;
+  margin-left: auto;
+  font-size: 0.78rem;
   white-space: nowrap;
 }
 
