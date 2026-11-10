@@ -1,16 +1,79 @@
 const STALE_MONTHS = 6;
-const DEFAULT_SORT = 'newest';
+const DEFAULT_SORT = 'hiring';
 const NO_OPENINGS = 'no-active-openings';
 const HIRING = 'hiring';
-const STATUS_BADGES = { [HIRING]: 'Hiring', [NO_OPENINGS]: 'No active openings' };
-const UNRESTRICTED = 'unrestricted';
+const STATUS_BADGES = { [HIRING]: 'Hiring now', [NO_OPENINGS]: 'No openings' };
 const STATUS_RANK = { [HIRING]: 0, [NO_OPENINGS]: 2 };
+const BENEFITS_PREVIEW = 3;
+
+// Region groups a country belongs to, and the words a location uses for them.
+const GROUP_WORDS = {
+  eu: ['eu', 'european union'],
+  europe: ['europe', 'european'],
+  emea: ['emea'],
+  middleeast: ['middle east'],
+  africa: ['africa'],
+  latam: ['latin america', 'latam', 'south america'],
+  northamerica: ['north america'],
+  americas: ['americas'],
+  apac: ['apac', 'asia', 'asia pacific'],
+};
+
+const EU = ['eu', 'europe', 'emea'];
+const EUROPE = ['europe', 'emea'];
+const MIDDLE_EAST = ['middleeast', 'emea'];
+const AFRICA = ['africa', 'emea'];
+const LATAM = ['latam', 'americas'];
+const NORTH_AMERICA = ['northamerica', 'americas'];
+const APAC = ['apac'];
+
+const COUNTRY_GROUPS = [
+  ['Europe', [
+    ['Austria', EU], ['Belgium', EU], ['Bulgaria', EU], ['Croatia', EU], ['Cyprus', EU],
+    ['Czechia', EU, ['czech republic']], ['Denmark', EU], ['Estonia', EU], ['Finland', EU], ['France', EU],
+    ['Germany', EU], ['Greece', EU], ['Hungary', EU], ['Ireland', EU], ['Italy', EU], ['Latvia', EU],
+    ['Lithuania', EU], ['Luxembourg', EU], ['Malta', EU], ['Netherlands', EU, ['holland']], ['Poland', EU],
+    ['Portugal', EU], ['Romania', EU], ['Slovakia', EU], ['Slovenia', EU], ['Spain', EU], ['Sweden', EU],
+    ['Albania', EUROPE], ['Bosnia and Herzegovina', EUROPE, ['bosnia']], ['Iceland', EUROPE], ['Moldova', EUROPE],
+    ['Montenegro', EUROPE], ['North Macedonia', EUROPE, ['macedonia']], ['Norway', EUROPE], ['Serbia', EUROPE],
+    ['Switzerland', EUROPE], ['Ukraine', EUROPE], ['United Kingdom', EUROPE, ['uk', 'britain', 'great britain', 'england', 'scotland', 'wales']],
+  ]],
+  ['Middle East and Caucasus', [
+    ['Armenia', MIDDLE_EAST], ['Azerbaijan', MIDDLE_EAST], ['Georgia', MIDDLE_EAST], ['Iran', MIDDLE_EAST],
+    ['Israel', MIDDLE_EAST], ['Jordan', MIDDLE_EAST], ['Lebanon', MIDDLE_EAST], ['Saudi Arabia', MIDDLE_EAST],
+    ['Turkey', MIDDLE_EAST, ['türkiye', 'turkiye']], ['United Arab Emirates', MIDDLE_EAST, ['uae']],
+  ]],
+  ['Africa', [
+    ['Egypt', AFRICA], ['Ghana', AFRICA], ['Kenya', AFRICA], ['Morocco', AFRICA], ['Nigeria', AFRICA],
+    ['South Africa', AFRICA], ['Tunisia', AFRICA], ['Uganda', AFRICA],
+  ]],
+  ['Americas', [
+    ['Canada', NORTH_AMERICA], ['United States', NORTH_AMERICA, ['usa', 'us', 'u.s.']],
+    ['Mexico', [...LATAM, 'northamerica']], ['Argentina', LATAM], ['Brazil', LATAM], ['Chile', LATAM],
+    ['Colombia', LATAM], ['Costa Rica', LATAM], ['Ecuador', LATAM], ['Peru', LATAM], ['Uruguay', LATAM],
+  ]],
+  ['Asia and Pacific', [
+    ['Australia', APAC], ['Bangladesh', APAC], ['China', APAC], ['India', APAC], ['Indonesia', APAC],
+    ['Japan', APAC], ['Malaysia', APAC], ['Nepal', APAC], ['New Zealand', APAC], ['Pakistan', APAC],
+    ['Philippines', APAC], ['Singapore', APAC], ['Sri Lanka', APAC], ['Thailand', APAC], ['Vietnam', APAC],
+  ]],
+];
+
+const COUNTRIES = new Map(
+  COUNTRY_GROUPS.flatMap(([, countries]) =>
+    countries.map(([name, groups, aliases = []]) => [name, { name, groups, words: [name.toLowerCase(), ...aliases] }]),
+  ),
+);
 
 const form = document.getElementById('filters');
 const results = document.getElementById('results');
 const summary = document.getElementById('summary');
 const template = document.getElementById('card');
 const clearButton = document.getElementById('clear');
+const copyButton = document.getElementById('copy-link');
+const filtersToggle = document.getElementById('filters-toggle');
+const filtersCount = document.getElementById('filters-count');
+const toTop = document.getElementById('to-top');
 const themeToggle = document.getElementById('theme-toggle');
 const darkQuery = matchMedia('(prefers-color-scheme: dark)');
 
@@ -21,13 +84,31 @@ const staleCutoff = (() => {
 })();
 
 const isSafeUrl = (url) => /^https?:\/\//i.test(url);
+const escapeRegExp = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const mentions = (text, words) => words.some((word) => new RegExp(`(^|[^a-z])${escapeRegExp(word)}([^a-z]|$)`).test(text));
+
+/**
+ * Whether someone living in `country` can apply, judging by the free-text `location` of the remote role.
+ */
+function hiresIn(location, country) {
+  if (!location) return true;
+  const text = location.toLowerCase();
+
+  const except = text.match(/worldwide except (.+)/);
+  if (except) return !mentions(except[1], country.words);
+  if (mentions(text, ['worldwide', 'anywhere', 'global'])) return true;
+  if (mentions(text, country.words)) return true;
+  if (country.groups.some((group) => mentions(text, GROUP_WORDS[group]))) return true;
+
+  // Time-zone based roles such as "US Pacific Time overlap" also suit the rest of the Americas.
+  const usTimeZone = /(^|[^a-z])us([^a-z]|$)[^,]*(time|overlap)/.test(text);
+  return usTimeZone && country.groups.includes('americas');
+}
 
 const searchText = (company) =>
-  [company.name, company.location || '', ...company.industries, ...company.benefits, STATUS_BADGES[company.status] || '']
+  [company.name, company.location || 'anywhere', ...company.industries, ...company.benefits, STATUS_BADGES[company.status] || '']
     .join(' ')
     .toLowerCase();
-
-const regionsOf = (company) => (company.location ? company.location.split(/\s*,\s*/) : [UNRESTRICTED]);
 
 const sorters = {
   name: (a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }),
@@ -37,6 +118,7 @@ const sorters = {
 };
 
 const relativeTime = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+const longDate = new Intl.DateTimeFormat('en', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
 
 function checkedLabel(date) {
   const days = Math.round((Date.parse(new Date().toISOString().slice(0, 10)) - Date.parse(date)) / 86400000);
@@ -46,79 +128,103 @@ function checkedLabel(date) {
   return `Checked ${relativeTime.format(-Math.round(days / 365), 'year')}`;
 }
 
+function hueOf(name) {
+  let hash = 0;
+  for (const char of name) hash = (hash * 31 + char.codePointAt(0)) % 360;
+  return hash;
+}
+
+function initials(name) {
+  const words = name.replace(/[^\p{L}\p{N} ]/gu, ' ').split(/\s+/).filter(Boolean);
+  if (words.length === 0) return '?';
+  if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+  return (words[0][0] + words[1][0]).toUpperCase();
+}
+
+// ---- State ---------------------------------------------------------------
+
 function readState() {
   const data = new FormData(form);
   return {
     q: (data.get('q') || '').trim(),
+    country: data.get('country') || '',
     industry: data.get('industry') || '',
-    region: data.get('region') || '',
+    status: data.get('status') || '',
     sort: data.get('sort') || DEFAULT_SORT,
     benefits: data.has('benefits'),
     recent: data.has('recent'),
-    hiring: data.has('hiring'),
-    open: data.has('open'),
   };
 }
 
 function writeState(state) {
   const params = new URLSearchParams();
   if (state.q) params.set('q', state.q);
+  if (state.country) params.set('country', state.country);
   if (state.industry) params.set('industry', state.industry);
-  if (state.region) params.set('region', state.region);
+  if (state.status) params.set('status', state.status);
   if (state.sort !== DEFAULT_SORT) params.set('sort', state.sort);
   if (state.benefits) params.set('benefits', '1');
   if (state.recent) params.set('recent', '1');
-  if (state.hiring) params.set('hiring', '1');
-  if (state.open) params.set('open', '1');
   const query = params.toString();
   history.replaceState(null, '', query ? `?${query}` : location.pathname);
+}
+
+function setStatus(value) {
+  for (const radio of form.querySelectorAll('input[name="status"]')) radio.checked = radio.value === value;
 }
 
 function restoreState() {
   const params = new URLSearchParams(location.search);
   form.q.value = params.get('q') || '';
+  // Older links used "region"; keep them working when it names a country.
+  const country = params.get('country') || params.get('region') || '';
+  form.country.value = COUNTRIES.has(country) ? country : '';
   form.industry.value = params.get('industry') || '';
-  form.region.value = params.get('region') || '';
+  let status = params.get('status') || '';
+  if (params.get('hiring') === '1' || params.get('open') === '1') status = 'hiring';
+  setStatus(['hiring', 'closed'].includes(status) ? status : '');
   form.sort.value = sorters[params.get('sort')] ? params.get('sort') : DEFAULT_SORT;
   form.benefits.checked = params.get('benefits') === '1';
   form.recent.checked = params.get('recent') === '1';
-  form.hiring.checked = params.get('hiring') === '1';
-  form.open.checked = params.get('open') === '1';
 }
+
+function activeFilterCount(state) {
+  return [state.q, state.country, state.industry, state.status, state.benefits, state.recent].filter(Boolean).length;
+}
+
+// ---- Options ---------------------------------------------------------------
 
 function fillIndustries(companies) {
   const counts = new Map();
   for (const company of companies) {
-    for (const industry of company.industries) {
-      counts.set(industry, (counts.get(industry) || 0) + 1);
-    }
+    for (const industry of company.industries) counts.set(industry, (counts.get(industry) || 0) + 1);
   }
   const names = [...counts.keys()].sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
-  for (const name of names) {
-    form.industry.append(new Option(`${name} (${counts.get(name)})`, name));
+  for (const name of names) form.industry.append(new Option(`${name} (${counts.get(name)})`, name));
+}
+
+function fillCountries(companies) {
+  for (const [group, countries] of COUNTRY_GROUPS) {
+    const optgroup = document.createElement('optgroup');
+    optgroup.label = group;
+    for (const [name] of countries) {
+      const country = COUNTRIES.get(name);
+      const count = companies.filter((company) => hiresIn(company.location, country)).length;
+      optgroup.append(new Option(`${name} (${count})`, name));
+    }
+    form.country.append(optgroup);
   }
 }
 
-function fillRegions(companies) {
-  const counts = new Map();
-  for (const company of companies) {
-    for (const region of company.regions) {
-      counts.set(region, (counts.get(region) || 0) + 1);
-    }
-  }
-  if (counts.has(UNRESTRICTED)) {
-    form.region.append(new Option(`No region limit listed (${counts.get(UNRESTRICTED)})`, UNRESTRICTED));
-    counts.delete(UNRESTRICTED);
-  }
-  const names = [...counts.keys()].sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
-  for (const name of names) {
-    form.region.append(new Option(`${name} (${counts.get(name)})`, name));
-  }
+function fillStats(companies) {
+  const set = (key, value) => (document.querySelector(`[data-stat="${key}"]`).textContent = value);
+  const latest = companies.reduce((max, company) => (company.last_verified > max ? company.last_verified : max), '');
+  set('total', companies.length);
+  set('hiring', companies.filter((company) => company.status === HIRING).length);
+  set('checked', latest ? longDate.format(new Date(latest)) : '–');
 }
 
-function isFiltered(state) {
-  return Boolean(state.q || state.industry || state.region || state.benefits || state.recent || state.hiring || state.open);
-}
+// ---- Rendering ---------------------------------------------------------------
 
 function iconLink(label, icon, href) {
   const anchor = document.createElement('a');
@@ -132,8 +238,10 @@ function iconLink(label, icon, href) {
   return anchor;
 }
 
-function renderCard(company) {
+function renderCard(company, state) {
   const card = template.content.firstElementChild.cloneNode(true);
+  card.style.setProperty('--hue', hueOf(company.name));
+  card.querySelector('.avatar').textContent = initials(company.name);
 
   const name = card.querySelector('.name a');
   name.textContent = company.name;
@@ -142,6 +250,7 @@ function renderCard(company) {
     name.href = company.url;
     openRoles.href = company.url;
     openRoles.setAttribute('aria-label', `Open roles at ${company.name}`);
+    if (company.status === HIRING) openRoles.querySelector('.label').textContent = 'See open roles';
   } else {
     openRoles.remove();
   }
@@ -155,23 +264,45 @@ function renderCard(company) {
     card.classList.add(company.status);
   }
 
+  const location = card.querySelector('.location span');
   if (company.location) {
-    const location = card.querySelector('.location');
     location.textContent = `Remote: ${company.location}`;
-    location.hidden = false;
+  } else {
+    location.textContent = 'Remote: anywhere';
+    location.title = 'No region limit listed';
   }
 
   const chips = card.querySelector('.chips');
   for (const industry of company.industries) {
-    const chip = document.createElement('li');
+    const item = document.createElement('li');
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'chip';
     chip.textContent = industry;
-    chips.append(chip);
+    chip.dataset.industry = industry;
+    chip.title = `Show only ${industry} companies`;
+    if (state.industry === industry) chip.setAttribute('aria-pressed', 'true');
+    item.append(chip);
+    chips.append(item);
   }
 
   const benefits = card.querySelector('.benefits');
-  for (const benefit of company.benefits) {
+  company.benefits.forEach((benefit, index) => {
     const item = document.createElement('li');
     item.textContent = benefit;
+    if (index >= BENEFITS_PREVIEW) item.className = 'extra';
+    benefits.append(item);
+  });
+  if (company.benefits.length > BENEFITS_PREVIEW) {
+    const extra = company.benefits.length - BENEFITS_PREVIEW;
+    const item = document.createElement('li');
+    item.className = 'more-item';
+    const more = document.createElement('button');
+    more.type = 'button';
+    more.className = 'benefits-toggle';
+    more.textContent = `+${extra} more`;
+    more.setAttribute('aria-expanded', 'false');
+    item.append(more);
     benefits.append(item);
   }
 
@@ -191,44 +322,72 @@ function renderCard(company) {
   return card;
 }
 
+function emptyState(state) {
+  const empty = document.createElement('li');
+  empty.className = 'empty';
+  const title = document.createElement('p');
+  title.className = 'empty-title';
+  title.textContent = 'No companies match these filters';
+  const hint = document.createElement('p');
+  hint.textContent = state.status === 'hiring'
+    ? 'Try showing companies with no open roles too: they hired remotely in the last year and may post again.'
+    : 'Try a shorter search or remove a filter.';
+  const actions = document.createElement('div');
+  actions.className = 'empty-actions';
+  if (state.status === 'hiring') {
+    const all = document.createElement('button');
+    all.type = 'button';
+    all.className = 'button';
+    all.textContent = 'Include companies with no openings';
+    all.addEventListener('click', () => {
+      setStatus('');
+      form.dispatchEvent(new Event('input'));
+    });
+    actions.append(all);
+  }
+  const reset = document.createElement('button');
+  reset.type = 'button';
+  reset.className = 'button primary';
+  reset.textContent = 'Clear all filters';
+  reset.addEventListener('click', clearFilters);
+  actions.append(reset);
+  empty.append(title, hint, actions);
+  return empty;
+}
+
 function render(companies) {
   const state = readState();
   writeState(state);
 
+  const country = COUNTRIES.get(state.country);
   const terms = state.q.toLowerCase().split(/\s+/).filter(Boolean);
   const visible = companies
+    .filter((company) => !country || hiresIn(company.location, country))
     .filter((company) => !state.industry || company.industries.includes(state.industry))
-    .filter((company) => !state.region || company.regions.includes(state.region))
+    .filter((company) => state.status !== 'hiring' || company.status === HIRING)
+    .filter((company) => state.status !== 'closed' || company.status === NO_OPENINGS)
     .filter((company) => !state.benefits || company.benefits.length > 0)
     .filter((company) => !state.recent || company.last_verified >= staleCutoff)
-    .filter((company) => !state.hiring || company.status === HIRING)
-    .filter((company) => !state.open || company.status !== NO_OPENINGS)
     .filter((company) => terms.every((term) => company.search.includes(term)))
     .sort(sorters[state.sort]);
 
   const hiring = visible.filter((company) => company.status === HIRING).length;
-  const count = visible.length === companies.length
+  const shown = visible.length === companies.length
     ? `${companies.length} companies`
-    : `Showing ${visible.length} of ${companies.length} companies`;
-  summary.textContent = hiring ? `${count}, ${hiring} hiring now` : count;
-  clearButton.hidden = !isFiltered(state);
+    : `${visible.length} of ${companies.length} companies`;
+  const where = country ? ` that hire in ${country.name}` : '';
+  summary.replaceChildren();
+  const strong = document.createElement('strong');
+  strong.textContent = shown;
+  summary.append(strong, `${where}${hiring ? ` · ${hiring} hiring now` : ''}`);
 
-  if (visible.length === 0) {
-    const empty = document.createElement('li');
-    empty.className = 'empty';
-    const message = document.createElement('p');
-    message.textContent = 'No companies match these filters.';
-    const reset = document.createElement('button');
-    reset.type = 'button';
-    reset.className = 'clear';
-    reset.textContent = 'Clear filters';
-    reset.addEventListener('click', clearFilters);
-    empty.append(message, reset);
-    results.replaceChildren(empty);
-    return;
-  }
+  const count = activeFilterCount(state);
+  clearButton.hidden = count === 0;
+  filtersCount.hidden = count === 0;
+  filtersCount.textContent = count;
 
-  results.replaceChildren(...visible.map(renderCard));
+  results.removeAttribute('aria-busy');
+  results.replaceChildren(...(visible.length ? visible.map((company) => renderCard(company, state)) : [emptyState(state)]));
 }
 
 function clearFilters() {
@@ -236,6 +395,96 @@ function clearFilters() {
   form.reset();
   form.sort.value = sort;
   form.dispatchEvent(new Event('input'));
+}
+
+// ---- Interactions ---------------------------------------------------------------
+
+function scrollToResults() {
+  form.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+}
+
+function setupResultsClicks() {
+  results.addEventListener('click', (event) => {
+    const chip = event.target.closest('.chip');
+    if (chip) {
+      form.industry.value = form.industry.value === chip.dataset.industry ? '' : chip.dataset.industry;
+      form.dispatchEvent(new Event('input'));
+      scrollToResults();
+      return;
+    }
+    const more = event.target.closest('.benefits-toggle');
+    if (more) {
+      const list = more.closest('.benefits');
+      const expanded = list.classList.toggle('expanded');
+      more.setAttribute('aria-expanded', String(expanded));
+      more.textContent = expanded ? 'Show less' : `+${list.querySelectorAll('.extra').length} more`;
+    }
+  });
+}
+
+function setupView() {
+  const buttons = document.querySelectorAll('.view-switch button');
+  const apply = (view) => {
+    results.classList.toggle('list', view === 'list');
+    for (const button of buttons) button.setAttribute('aria-pressed', String(button.dataset.view === view));
+  };
+  let saved = 'cards';
+  try {
+    saved = localStorage.getItem('view') === 'list' ? 'list' : 'cards';
+  } catch (error) {}
+  apply(saved);
+  for (const button of buttons) {
+    button.addEventListener('click', () => {
+      apply(button.dataset.view);
+      try {
+        localStorage.setItem('view', button.dataset.view);
+      } catch (error) {}
+    });
+  }
+}
+
+function setupFiltersToggle() {
+  filtersToggle.addEventListener('click', () => {
+    const open = form.classList.toggle('open');
+    filtersToggle.setAttribute('aria-expanded', String(open));
+  });
+}
+
+function setupCopyLink() {
+  const label = copyButton.querySelector('span');
+  copyButton.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(location.href);
+      label.textContent = 'Link copied';
+    } catch (error) {
+      label.textContent = 'Copy failed';
+    }
+    copyButton.classList.add('done');
+    setTimeout(() => {
+      label.textContent = 'Copy link';
+      copyButton.classList.remove('done');
+    }, 1800);
+  });
+}
+
+function setupShowHiring() {
+  document.getElementById('show-hiring').addEventListener('click', () => {
+    setStatus('hiring');
+    form.dispatchEvent(new Event('input'));
+    scrollToResults();
+  });
+}
+
+function setupToTop() {
+  const update = () => {
+    toTop.hidden = window.scrollY < 900;
+  };
+  addEventListener('scroll', update, { passive: true });
+  update();
+  toTop.addEventListener('click', () => {
+    scrollToResults();
+    form.q.focus({ preventScroll: true });
+  });
 }
 
 function setupShortcuts() {
@@ -247,7 +496,15 @@ function setupShortcuts() {
     form.q.focus();
     form.q.select();
   });
+  form.q.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && form.q.value) {
+      form.q.value = '';
+      form.dispatchEvent(new Event('input'));
+    }
+  });
 }
+
+// ---- Theme ---------------------------------------------------------------
 
 function currentTheme() {
   return document.documentElement.dataset.theme || (darkQuery.matches ? 'dark' : 'light');
@@ -273,21 +530,30 @@ function setupThemeToggle() {
 }
 
 async function main() {
+  setupView();
+  setupFiltersToggle();
+  setupToTop();
   try {
     const response = await fetch('companies.json', { cache: 'no-cache' });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const companies = (await response.json()).map((company) => ({ ...company, regions: regionsOf(company), search: searchText(company) }));
+    const companies = (await response.json()).map((company) => ({ ...company, search: searchText(company) }));
 
+    fillStats(companies);
     fillIndustries(companies);
-    fillRegions(companies);
+    fillCountries(companies);
     restoreState();
     form.addEventListener('input', () => render(companies));
     form.addEventListener('submit', (event) => event.preventDefault());
     clearButton.addEventListener('click', clearFilters);
+    setupResultsClicks();
+    setupCopyLink();
+    setupShowHiring();
     setupShortcuts();
     render(companies);
   } catch (error) {
-    summary.textContent = `Could not load the company list (${error.message}).`;
+    results.removeAttribute('aria-busy');
+    results.replaceChildren();
+    summary.textContent = `Could not load the company list (${error.message}). Try reloading the page.`;
   }
 }
 
