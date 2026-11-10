@@ -596,3 +596,38 @@
     - Opportunities to attend sporting events
   linkedin: https://www.linkedin.com/company/eventhubgmbh/jobs/
   last_verified: 2026-11-10
+
+- name: team.blue
+  url: https://careers.team.blue/
+  status: hiring
+  location: Italy, Bulgaria, Spain, Portugal, Netherlands
+  industries:
+    - Web Hosting
+    - Cloud
+    - SaaS
+  linkedin: https://www.linkedin.com/company/teamblue/jobs/
+  glassdoor: https://www.glassdoor.com/Overview/Working-at-team-blue-EI_IE4686323.11,20.htm
+  last_verified: 2026-11-10
+
+- name: OLX
+  url: https://careers.olxgroup.com/jobs/
+  status: hiring
+  location: Portugal, Poland
+  industries:
+    - Online Marketplaces
+  linkedin: https://www.linkedin.com/company/olx-group/jobs/
+  glassdoor: https://www.glassdoor.com/Overview/Working-at-OLX-Group-EI_IE517166.11,20.htm
+  last_verified: 2026-11-10
+
+- name: EXADS
+  url: https://www.exads.com/exads-careers
+  status: hiring
+  location: Portugal
+  industries:
+    - Ad Tech
+  benefits:
+    - Annual training budget and Udemy for Business
+    - Team buildings abroad
+  linkedin: https://www.linkedin.com/company/exads/jobs/
+  glassdoor: https://www.glassdoor.com/Overview/Working-at-EXADS-EI_IE2158825.11,16.htm
+  last_verified: 2026-11-10
