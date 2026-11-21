@@ -886,3 +886,45 @@
     - Ad Tech
   linkedin: https://www.linkedin.com/company/clickgo/jobs/
   last_verified: 2026-11-21
+
+- name: PromptEdit
+  url: https://promptedit.com/
+  status: hiring
+  positions:
+    - title: Senior Product Engineer (Laravel/Vue)
+      url: https://docs.google.com/document/d/12VIa7syPDk6LYNlv5OR6VxYvfMZ8iMKVZI1u_xhPzHM/edit
+      tags:
+        - Laravel
+        - Vue
+        - Inertia
+        - PostgreSQL
+        - AWS
+        - AI
+  industries:
+    - Video Editing
+    - Creator Tools
+    - AI
+  benefits:
+    - Performance bonuses
+    - No daily standups or sprint ceremonies
+  last_verified: 2026-11-21
+
+- name: Emergent 3
+  url: https://emergent3.com/
+  status: hiring
+  location: USA, Brazil
+  positions:
+    - title: Senior Software Engineer (Laravel)
+      url: https://drive.google.com/file/d/1IyAfvrBdYdfRcJl-FJaE-nUHuhWVcJXm/view
+      tags:
+        - Laravel
+        - PHP
+        - MySQL
+        - React
+        - TypeScript
+        - Redis
+  industries:
+    - School Safety
+    - SaaS
+  linkedin: https://www.linkedin.com/company/emergent-3/jobs/
+  last_verified: 2026-11-21
