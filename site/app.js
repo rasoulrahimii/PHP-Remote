@@ -66,6 +66,9 @@ const COUNTRIES = new Map(
   ),
 );
 
+// Rows opened in the list view, by company name, so they stay open when the filters change.
+const expandedRows = new Set();
+
 const form = document.getElementById('filters');
 const results = document.getElementById('results');
 const summary = document.getElementById('summary');
@@ -547,6 +550,11 @@ function renderCard(company, state) {
   if (isSafeUrl(company.linkedin)) links.append(iconLink(`${company.name} on LinkedIn`, 'linkedin', company.linkedin));
   if (company.glassdoor && isSafeUrl(company.glassdoor)) links.append(iconLink(`${company.name} on Glassdoor`, 'glassdoor', company.glassdoor));
 
+  const toggle = card.querySelector('.row-toggle');
+  const count = positionsOf(company).length;
+  toggle.setAttribute('aria-label', `${company.name}: show ${count ? `${count} open ${count === 1 ? 'role' : 'roles'} and ` : ''}details`);
+  setExpanded(card, expandedRows.has(company.name));
+
   const verified = card.querySelector('.verified');
   verified.dateTime = company.last_verified;
   verified.textContent = checkedLabel(company.last_verified);
@@ -557,6 +565,19 @@ function renderCard(company, state) {
   }
 
   return card;
+}
+
+function setExpanded(card, expanded) {
+  card.classList.toggle('expanded', expanded);
+  card.querySelector('.row-toggle').setAttribute('aria-expanded', String(expanded));
+}
+
+function toggleRow(card) {
+  const name = card.querySelector('.name').textContent;
+  const expanded = !card.classList.contains('expanded');
+  if (expanded) expandedRows.add(name);
+  else expandedRows.delete(name);
+  setExpanded(card, expanded);
 }
 
 function emptyState(state) {
@@ -655,6 +676,17 @@ function setupResultsClicks() {
       form.industry.value = form.industry.value === chip.dataset.industry ? '' : chip.dataset.industry;
       form.dispatchEvent(new Event('input'));
       scrollToResults();
+      return;
+    }
+    const toggle = event.target.closest('.row-toggle');
+    if (toggle) {
+      toggleRow(toggle.closest('.card'));
+      return;
+    }
+    // In the list view, a click anywhere on a row that is not a link or button opens or closes it.
+    const row = results.classList.contains('list') && event.target.closest('.card:not(.skeleton)');
+    if (row && !event.target.closest('a, button') && !getSelection().toString()) {
+      toggleRow(row);
       return;
     }
     const more = event.target.closest('.benefits-toggle');
