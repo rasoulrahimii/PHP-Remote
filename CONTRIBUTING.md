@@ -24,7 +24,15 @@ All company data lives in [`companies.yml`](companies.yml). The website is gener
    ```yaml
    - name: Example Co
      url: https://example.com/careers/
+     status: hiring
      location: EU
+     positions:
+       - title: Senior Backend Engineer (Laravel)
+         url: https://example.com/careers/senior-backend-engineer/
+         tags:
+           - Laravel
+           - Vue
+           - MySQL
      industries:
        - SaaS
        - E-commerce
@@ -53,17 +61,26 @@ All company data lives in [`companies.yml`](companies.yml). The website is gener
 | `url`           | Yes      | Careers or jobs page.                                                            |
 | `status`        | No       | `hiring` when a remote PHP role is open right now, `no-active-openings` when nothing PHP related is open. Leave it out if you have not checked. |
 | `location`      | No       | Where the remote role is open, when it is limited to a region, for example `USA`, `EU` or `Worldwide except USA`. Use countries or regions, not cities. Leave it out when the company hires remotely from anywhere. |
+| `positions`     | When hiring | Every open remote PHP role, each with a `title`, a `url` that links straight to the job post on the company's careers page or applicant tracking system, and `tags` for its stack. Required when `status` is `hiring`, and left out otherwise. |
 | `industries`    | Yes      | One or more industries, as a list.                                               |
 | `benefits`      | No       | Notable benefits, one per list item. Leave the field out if you do not know any. |
 | `linkedin`      | No       | The company's LinkedIn jobs page. Leave it out only when the company has no LinkedIn page. |
 | `glassdoor`     | No       | The company's Glassdoor overview page, using `glassdoor.com`.                     |
 | `last_verified` | Yes      | The date you checked the criteria above, as `YYYY-MM-DD`.                        |
 
-Validation rejects unknown fields, invalid URLs, dates in the future and duplicate companies.
+Validation rejects unknown fields, invalid URLs, dates in the future and duplicate companies or job posts.
+
+#### Tags
+
+List up to 6 tags per position, most important first: the PHP framework, then the rest of the stack the post asks for. Use `PHP` when no framework is named. Pick tags from this list so the site's stack filter stays useful:
+
+`PHP`, `Laravel`, `Symfony`, `WordPress`, `Magento`, `Drupal`, `Livewire`, `Filament`, `Inertia`, `Vue`, `Nuxt`, `React`, `Next.js`, `Angular`, `Alpine.js`, `TypeScript`, `JavaScript`, `Node.js`, `Go`, `Python`, `Java`, `MySQL`, `PostgreSQL`, `ClickHouse`, `Redis`, `Elasticsearch`, `AWS`, `GCP`, `Docker`, `Kubernetes`, `Terraform`, `DevOps`, `AI`
+
+To add a tag, add it to `TAGS` in `scripts/companies.php` in the same pull request.
 
 ## Re-verify an existing entry
 
-Every entry has a `last_verified` date. To refresh one, check that the company still meets the criteria, then update `last_verified` to today's date in a pull request. Set `status` to `hiring` if a remote PHP role is open, or to `no-active-openings` if the company still qualifies but has nothing open at the moment. If the company no longer qualifies, remove the entry instead.
+Every entry has a `last_verified` date. To refresh one, check that the company still meets the criteria, then update `last_verified` to today's date in a pull request. Set `status` to `hiring` and update `positions` if a remote PHP role is open, or set it to `no-active-openings` and remove `positions` if the company still qualifies but has nothing open at the moment. If the company no longer qualifies, remove the entry instead.
 
 Once a week, a workflow opens (or updates) an issue labelled `stale-entries` that lists every company not verified in the last 6 months. Picking items from that issue is a great first contribution.
 

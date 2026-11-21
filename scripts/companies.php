@@ -8,7 +8,16 @@ use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
 const DATA_FILE = __DIR__ . '/../companies.yml';
-const FIELDS = ['name', 'url', 'status', 'location', 'industries', 'benefits', 'linkedin', 'glassdoor', 'last_verified'];
+const FIELDS = ['name', 'url', 'status', 'location', 'positions', 'industries', 'benefits', 'linkedin', 'glassdoor', 'last_verified'];
+const POSITION_FIELDS = ['title', 'url', 'tags'];
+const MAX_TAGS = 6;
+// Tags for the stack of a position. Keep the list short so the site's stack filter stays useful.
+const TAGS = [
+    'PHP', 'Laravel', 'Symfony', 'WordPress', 'Magento', 'Drupal', 'Livewire', 'Filament', 'Inertia',
+    'Vue', 'Nuxt', 'React', 'Next.js', 'Angular', 'Alpine.js', 'TypeScript', 'JavaScript', 'Node.js',
+    'Go', 'Python', 'Java', 'MySQL', 'PostgreSQL', 'ClickHouse', 'Redis', 'Elasticsearch',
+    'AWS', 'GCP', 'Docker', 'Kubernetes', 'Terraform', 'DevOps', 'AI',
+];
 const STATUSES = ['active', 'hiring', 'no-active-openings'];
 const DEFAULT_STALE_MONTHS = 6;
 
@@ -26,7 +35,7 @@ final class InvalidData extends RuntimeException
 }
 
 /**
- * @return list<array{name: string, url: string, status: string, location: ?string, industries: list<string>, benefits: list<string>, linkedin: ?string, glassdoor: ?string, last_verified: string}>
+ * @return list<array{name: string, url: string, status: string, location: ?string, positions: list<array{title: string, url: string, tags: list<string>}>, industries: list<string>, benefits: list<string>, linkedin: ?string, glassdoor: ?string, last_verified: string}>
  */
 function loadCompanies(): array
 {
@@ -66,7 +75,7 @@ function loadCompanies(): array
 
 /**
  * @param list<string> $errors
- * @return ?array{name: string, url: string, status: string, location: ?string, industries: list<string>, benefits: list<string>, linkedin: ?string, glassdoor: ?string, last_verified: string}
+ * @return ?array{name: string, url: string, status: string, location: ?string, positions: list<array{title: string, url: string, tags: list<string>}>, industries: list<string>, benefits: list<string>, linkedin: ?string, glassdoor: ?string, last_verified: string}
  */
 function normalizeCompany(mixed $entry, string $label, array &$errors): ?array
 {
@@ -87,6 +96,7 @@ function normalizeCompany(mixed $entry, string $label, array &$errors): ?array
         'url' => url($entry, 'url', $label, $errors, true),
         'status' => status($entry, $label, $errors),
         'location' => isset($entry['location']) ? text($entry, 'location', $label, $errors) : null,
+        'positions' => positions($entry, $label, $errors),
         'industries' => textList($entry, 'industries', $label, $errors, true),
         'benefits' => textList($entry, 'benefits', $label, $errors, false),
         'linkedin' => url($entry, 'linkedin', $label, $errors, false),
@@ -94,7 +104,66 @@ function normalizeCompany(mixed $entry, string $label, array &$errors): ?array
         'last_verified' => verifiedDate($entry, $label, $errors),
     ];
 
+    if ($company['status'] === 'hiring' && $company['positions'] === [] && !isset($entry['positions'])) {
+        $errors[] = sprintf('%s: a hiring company needs "positions", with a direct link to each open remote PHP role.', $label);
+    }
+    if ($company['status'] === 'no-active-openings' && $company['positions'] !== []) {
+        $errors[] = sprintf('%s: "positions" lists open roles only, so remove it or set "status" to hiring.', $label);
+    }
+
     return count($errors) === $errorCount ? $company : null;
+}
+
+/**
+ * The open roles: a title, a direct link to the job post and the stack as tags.
+ *
+ * @param array<string, mixed> $entry
+ * @param list<string> $errors
+ * @return list<array{title: string, url: string, tags: list<string>}>
+ */
+function positions(array $entry, string $label, array &$errors): array
+{
+    $value = $entry['positions'] ?? null;
+    if ($value === null) {
+        return [];
+    }
+    if (!is_array($value) || !array_is_list($value) || $value === []) {
+        $errors[] = sprintf('%s: "positions" must be a non-empty list.', $label);
+
+        return [];
+    }
+
+    $positions = [];
+    foreach ($value as $index => $position) {
+        $positionLabel = sprintf('%s, position #%d', $label, $index + 1);
+        if (!is_array($position) || array_is_list($position)) {
+            $errors[] = sprintf('%s: must be a set of fields (title, url, tags).', $positionLabel);
+
+            continue;
+        }
+        foreach (array_diff(array_keys($position), POSITION_FIELDS) as $field) {
+            $errors[] = sprintf('%s: unknown field "%s". Allowed fields: %s.', $positionLabel, $field, implode(', ', POSITION_FIELDS));
+        }
+
+        $title = text($position, 'title', $positionLabel, $errors);
+        $url = url($position, 'url', $positionLabel, $errors, true);
+        $tags = textList($position, 'tags', $positionLabel, $errors, true);
+        foreach (array_diff($tags, TAGS) as $tag) {
+            $errors[] = sprintf('%s: unknown tag "%s". Allowed tags: %s.', $positionLabel, $tag, implode(', ', TAGS));
+        }
+        if (count($tags) > MAX_TAGS) {
+            $errors[] = sprintf('%s: use at most %d tags, the main parts of the stack.', $positionLabel, MAX_TAGS);
+        }
+        if (count(array_unique($tags)) !== count($tags)) {
+            $errors[] = sprintf('%s: a tag is listed twice.', $positionLabel);
+        }
+
+        if ($title !== null && $url !== null) {
+            $positions[] = ['title' => $title, 'url' => $url, 'tags' => $tags];
+        }
+    }
+
+    return $positions;
 }
 
 /**
@@ -230,6 +299,17 @@ function findDuplicates(array $companies): array
                 $errors[] = sprintf('Duplicate %s "%s" in "%s" and "%s".', $field, $company[$field], $seen[$key], $company['name']);
 
                 continue;
+            }
+            $seen[$key] = $company['name'];
+        }
+    }
+
+    $seen = [];
+    foreach ($companies as $company) {
+        foreach ($company['positions'] as $position) {
+            $key = strtolower(rtrim($position['url'], '/'));
+            if (isset($seen[$key])) {
+                $errors[] = sprintf('Duplicate position url "%s" in "%s" and "%s".', $position['url'], $seen[$key], $company['name']);
             }
             $seen[$key] = $company['name'];
         }

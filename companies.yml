@@ -2,6 +2,14 @@
   url: https://fueled.com/careers/
   status: hiring
   location: Latin America
+  positions:
+    - title: Full Stack Web Engineer (WordPress)
+      url: https://fueled.com/careers/full-stack-web-engineer-latam/
+      tags:
+        - WordPress
+        - PHP
+        - React
+        - JavaScript
   industries:
     - Web
   benefits:
@@ -10,7 +18,7 @@
     - Annual all-team Summit
   linkedin: https://www.linkedin.com/company/10up/jobs/
   glassdoor: https://www.glassdoor.com/Overview/Working-at-10up-EI_IE775906.11,15.htm
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: Agent Legend
   url: https://agentlegend.com/
@@ -19,11 +27,18 @@
     - AI
   linkedin: https://www.linkedin.com/company/agent-legend/jobs/
   glassdoor: https://www.glassdoor.com/Overview/Working-at-Agent-Legend-EI_IE1719438.11,23.htm
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: Automattic
   url: https://automattic.com/work-with-us/
   status: hiring
+  positions:
+    - title: Experienced Software Engineer
+      url: https://automattic.com/work-with-us/job/experienced-software-engineer/
+      tags:
+        - PHP
+        - JavaScript
+        - WordPress
   industries:
     - Web
   benefits:
@@ -33,7 +48,7 @@
     - Life insurance
   linkedin: https://www.linkedin.com/company/automattic/jobs/
   glassdoor: https://www.glassdoor.sg/Overview/Working-at-Automattic-EI_IE751107.11,21.htm
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: Awesome Motive
   url: https://awesomemotive.com/careers/#positions
@@ -49,7 +64,7 @@
     - Health, Dental & Vision Insurance
   linkedin: https://www.linkedin.com/company/awesome-motive-inc./jobs/
   glassdoor: https://www.glassdoor.sg/Overview/Working-at-Awesome-Motive-EI_IE2048106.11,25.htm
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: BlockLabs
   url: https://www.blocklabs.io/
@@ -59,7 +74,7 @@
   benefits:
     - 30 days of annual leave
   linkedin: https://www.linkedin.com/company/block-labs-web3/jobs/
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: Bookinglayer
   url: https://www.bookinglayer.com/careers/
@@ -70,7 +85,7 @@
     - One team meetup a year, flexible working hours
   linkedin: https://www.linkedin.com/company/bookinglayer/jobs/
   glassdoor: https://www.glassdoor.com/Overview/Working-at-Bookinglayer-EI_IE9369500.11,23.htm
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: Buckhill
   url: https://www.buckhill.co.uk/about/careers/departments-and-positions
@@ -81,7 +96,7 @@
     - 'Working schedule flexibility, Sponsored professional learning, Fully covered sick leave, Salary range for Senior Software Developer: €50.3k – €94.3k'
   linkedin: https://www.linkedin.com/company/buckhill-software/jobs/
   glassdoor: https://www.glassdoor.com/Overview/Working-at-Buckhill-EI_IE993950.11,19.htm
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: Chess.com
   url: https://www.chess.com/jobs
@@ -90,7 +105,7 @@
     - Online Game Publishing
   linkedin: https://www.linkedin.com/company/chess-com/jobs/
   glassdoor: https://www.glassdoor.com/Overview/Working-at-Chess-com-EI_IE2241778.11,20.htm
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: Coaching.com
   url: https://www.coaching.com/
@@ -99,16 +114,34 @@
     - Online Coaching Platform
   linkedin: https://www.linkedin.com/company/coachingdotcom/jobs/
   glassdoor: https://www.glassdoor.com/Overview/Working-at-Coaching-com-EI_IE5399613.11,23.htm
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: CobbleWeb
   url: https://www.cobbleweb.co.uk/recruitment/#job_list
   status: hiring
+  positions:
+    - title: Senior Back-End PHP Engineer
+      url: https://www.cobbleweb.co.uk/jobs/php-backend-engineer/
+      tags:
+        - Symfony
+        - PHP
+        - MySQL
+        - PostgreSQL
+        - Docker
+    - title: Senior Full-stack PHP Engineer
+      url: https://www.cobbleweb.co.uk/jobs/php/
+      tags:
+        - Symfony
+        - PHP
+        - React
+        - Next.js
+        - MySQL
+        - Docker
   industries:
     - Software
   linkedin: https://www.linkedin.com/company/cobbleweb/jobs/
   glassdoor: https://www.glassdoor.com/Overview/Working-at-CobbleWeb-EI_IE3292066.11,20.htm
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: Cody AI
   url: https://meetcody.ai/
@@ -118,23 +151,38 @@
   benefits:
     - 100k-140k USD per year for Senior Laravel Developer
   linkedin: https://www.linkedin.com/company/meetcodyai/jobs/
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: CRAE Group
   url: https://craegroup.com/careers
   status: hiring
+  positions:
+    - title: DevOps Engineer (Laravel)
+      url: https://craegroup.com/careers/devops-engineer-laravel-nuxt
+      tags:
+        - Laravel
+        - PHP
+        - DevOps
+        - AWS
+        - Redis
   industries:
     - iGaming
   benefits:
     - Paid annual leave
     - Performance bonus package
   linkedin: https://www.linkedin.com/company/craegroup/jobs/
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: Evolution Collect
   url: https://evolutioncollect.com/
   status: hiring
   location: USA
+  positions:
+    - title: Senior Full Stack Engineer (PHP/Laravel)
+      url: https://docs.google.com/forms/d/e/1FAIpQLScVhz5GKl7Dh0pE1UaL-zPhWr839OJ3CNzoztqQ5uTrM9sOwQ/viewform
+      tags:
+        - Laravel
+        - PHP
   industries:
     - Fintech
   linkedin: https://www.linkedin.com/company/evolution-collect/jobs/
@@ -149,7 +197,7 @@
     - Flexible working hours and time off, Paid Parental Leave, Training (unlimited Udemy + more), Comprehensive Medical, Dental, Vision
   linkedin: https://www.linkedin.com/company/fandomwikia/jobs/
   glassdoor: https://www.glassdoor.com/Overview/Working-at-Fandom-EI_IE428648.11,17.htm
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: Givebutter
   url: https://givebutter.com/careers
@@ -164,7 +212,7 @@
     - Home office stipend
   linkedin: https://www.linkedin.com/company/givebutter/jobs/
   glassdoor: https://www.glassdoor.com/Overview/Working-at-Givebutter-EI_IE4414509.11,21.htm
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: GradGuard
   url: https://gradguard.com/careers
@@ -177,12 +225,21 @@
     - Parental leave
     - 401k match up to 5%
   linkedin: https://www.linkedin.com/company/gradguard/jobs/
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: Hospitable
   url: https://apply.workable.com/hospitable/
   status: hiring
   location: European or US East Coast time zones
+  positions:
+    - title: Product Engineer (Laravel)
+      url: https://apply.workable.com/hospitable/j/A0F082F91A/
+      tags:
+        - Laravel
+        - PHP
+        - Angular
+        - MySQL
+        - AI
   industries:
     - Software
     - Service
@@ -192,11 +249,11 @@
     - Mental health and emotional support
   linkedin: https://www.linkedin.com/company/hospitable/jobs/
   glassdoor: https://www.glassdoor.com/Overview/Working-at-Hospitable-EI_IE2148011.11,21.htm
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: Hostaway
   url: https://hostaway.recruitee.com/
-  status: hiring
+  status: no-active-openings
   location: EMEA
   industries:
     - Vacation Rental Software
@@ -204,7 +261,7 @@
     - Equity, Annual Paid Leave, Geographic Specific Benefits
   linkedin: https://www.linkedin.com/company/hostaway/jobs/
   glassdoor: https://www.glassdoor.com/Overview/Working-at-Hostaway-EI_IE1358830.11,19.htm
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: Interaction Design Foundation
   url: https://ixdf.org/about/careers
@@ -219,7 +276,7 @@
     - Marathon stipend
   linkedin: https://www.linkedin.com/company/ixdf-interaction-design-foundation-school/jobs/
   glassdoor: https://www.glassdoor.com/Overview/Working-at-Interaction-Design-Foundation-EI_IE1147112.11,40.htm
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: Kirschbaum
   url: https://kirschbaumdevelopment.com/careers
@@ -230,7 +287,7 @@
     - Company computer, Paid vacation, Budget for books/conferences, Paid holidays, Health, dental & vision insurance, Paid open-source time, Maternity / paternity leave
   linkedin: https://www.linkedin.com/company/kirschbaumdevelopment/jobs/
   glassdoor: https://www.glassdoor.com/Overview/Working-at-Kirschbaum-EI_IE8311634.11,21.htm
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: LabelWorx
   url: https://labelworx.com/
@@ -243,7 +300,7 @@
     - Birthday off
     - Extra annual leave with length of service
   linkedin: https://www.linkedin.com/company/label-worx-ltd/jobs/
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: Lokalise
   url: https://lokalise.com/careers
@@ -259,7 +316,7 @@
     - Stock options
   linkedin: https://www.linkedin.com/company/lokalise/jobs/
   glassdoor: https://www.glassdoor.com/Overview/Working-at-Lokalise-EI_IE3398432.11,19.htm
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: Lumion
   url: https://jobs.lumion.ai/
@@ -279,13 +336,21 @@
   url: https://www.mailerlite.com/jobs
   status: hiring
   location: EMEA
+  positions:
+    - title: Technical Lead (PHP/Laravel)
+      url: https://www.mailerlite.com/jobs/tech-lead
+      tags:
+        - Laravel
+        - PHP
+        - Vue
+        - PostgreSQL
   industries:
     - Email Automations
   benefits:
     - 'International health insurance, 31 days of vacation per year, Yearly gross salary range: $55,000-$65,000'
   linkedin: https://www.linkedin.com/company/mailerlite-international/jobs/
   glassdoor: https://www.glassdoor.com/Overview/Working-at-MailerLite-EI_IE1504754.11,21.htm
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: Matomo
   url: https://matomo.org/jobs/
@@ -298,7 +363,7 @@
     - Paid certifications & training as applicable
   linkedin: https://www.linkedin.com/company/matomo/jobs/
   glassdoor: https://www.glassdoor.com/Overview/Working-at-Matomo-EI_IE9336278.11,17.htm
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: Modus Create
   url: https://www.moduscreate.com/careers
@@ -311,7 +376,7 @@
     - Employee Referral Program
   linkedin: https://www.linkedin.com/company/modus-create/jobs/
   glassdoor: https://www.glassdoor.com/Overview/Working-at-Modus-Create-EI_IE718505.11,23.htm
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: Nagarro
   url: https://www.nagarro.com/en/careers
@@ -333,12 +398,22 @@
     - Latest hardware and software
   linkedin: https://www.linkedin.com/company/nordhealth/jobs/
   glassdoor: https://www.glassdoor.com/Overview/Working-at-Nordhealth-EI_IE6350968.11,21.htm
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: Optimizee Group
   url: https://optimizeegroup.com/home/jobs/
   status: hiring
   location: Worldwide except USA
+  positions:
+    - title: Product Lead (Strategy + Full Stack)
+      url: https://optimizeegroup.com/product-lead/
+      tags:
+        - Laravel
+        - PHP
+        - Livewire
+        - Alpine.js
+        - MySQL
+        - Redis
   industries:
     - Fintech
   benefits:
@@ -358,12 +433,27 @@
     - Relocation Support, Health insurance
   linkedin: https://www.linkedin.com/company/printify/jobs/
   glassdoor: https://www.glassdoor.com/Overview/Working-at-Printify-EI_IE3094843.11,19.htm
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: Prompt Health
   url: https://www.prompthealth.com/careers
   status: hiring
   location: USA
+  positions:
+    - title: Senior Full Stack Software Engineer
+      url: https://jobs.ashbyhq.com/Prompt/e2c99b8e-11cb-45a2-baca-9afe0d204399
+      tags:
+        - Laravel
+        - PHP
+        - Vue
+        - MySQL
+    - title: Staff Software Engineer
+      url: https://jobs.ashbyhq.com/Prompt/f04a4c5e-e26d-464f-872f-255c97457ef9
+      tags:
+        - Laravel
+        - PHP
+        - Vue
+        - MySQL
   industries:
     - Digital Healthcare
     - SaaS
@@ -372,11 +462,20 @@
     - 401k
     - Medical, dental and vision insurance
   linkedin: https://www.linkedin.com/company/promptemr/jobs/
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: RapidSeedbox Ltd
   url: https://www.rapidseedbox.com/jobs
   status: hiring
+  positions:
+    - title: PHP Developer (WHMCS specialist)
+      url: https://www.rapidseedbox.com/job_openings/php-developer-whmcs
+      tags:
+        - PHP
+        - Laravel
+        - Symfony
+        - WordPress
+        - MySQL
   industries:
     - Software
   benefits:
@@ -385,7 +484,7 @@
     - Company retreats
   linkedin: https://www.rapidseedbox.com/jobs
   glassdoor: https://www.glassdoor.com/Overview/Working-at-RapidSeedbox-EI_IE1446416.11,23.htm
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: RebelCode
   url: https://rebelcode.com/careers/
@@ -396,7 +495,7 @@
     - Conferences
     - Team meet-ups and retreats
   linkedin: https://www.linkedin.com/company/rebelcode/jobs/
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: Resource Innovations
   url: https://apply.workable.com/resource-innovations/
@@ -406,7 +505,7 @@
     - Energy
     - SaaS
   linkedin: https://www.linkedin.com/company/resourceinnovations/jobs/
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: SecureIT Swiss
   url: https://jobs.secureit.ch/
@@ -431,7 +530,7 @@
     - Investment in gear
   linkedin: https://www.linkedin.com/company/seo-sherpa/jobs/
   glassdoor: https://www.glassdoor.com/Overview/Working-at-SEO-Sherpa-EI_IE4640375.11,21.htm
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: Sportserve
   url: https://careers.sportserve.co/
@@ -440,7 +539,7 @@
     - Sports Betting
   linkedin: https://www.linkedin.com/company/asianlogic-ltd.---bayview-technologies/jobs/
   glassdoor: https://www.glassdoor.com/Overview/Working-at-Sportserve-EI_IE9173106.11,21.htm
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: Springloaded
   url: https://springloaded.co/jobs
@@ -448,16 +547,26 @@
   industries:
     - Software
   linkedin: https://www.linkedin.com/company/springloaded/jobs/
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: Supporting Cast
   url: https://www.supportingcast.fm/jobs
   status: hiring
   location: USA
+  positions:
+    - title: Software Engineer (PHP/Laravel)
+      url: https://jobs.lever.co/slate/557fe4ab-d292-4069-8c63-36752f3da91d
+      tags:
+        - Laravel
+        - PHP
+        - PostgreSQL
+        - Redis
+        - React
+        - AI
   industries:
     - Podcasting
   linkedin: https://www.linkedin.com/company/supportingcast/jobs/
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: Tighten
   url: https://tighten.com/careers/
@@ -469,7 +578,7 @@
     - Bi-annual Onsites
     - Workspace Allowance
   linkedin: https://www.linkedin.com/company/tightenco/jobs/
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: Tixel
   url: https://tixel.com/
@@ -479,7 +588,7 @@
     - Live Events
   linkedin: https://www.linkedin.com/company/tixelofficial/jobs/
   glassdoor: https://www.glassdoor.com/Overview/Working-at-Tixel-EI_IE7186147.11,16.htm
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: Track it Forward
   url: https://www.trackitforward.com/
@@ -499,7 +608,7 @@
   industries:
     - Digital marketing & SEO agency
   linkedin: https://www.linkedin.com/company/trustfactoryde/jobs/
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: UserScape
   url: https://userscape.com/
@@ -507,7 +616,7 @@
   industries:
     - Laravel / Open Source Software
   linkedin: https://www.linkedin.com/company/userscape/jobs/
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: Uniplaces
   url: https://uniplaces.thinkopen.solutions/jobs
@@ -519,7 +628,7 @@
     - Two offsite events per year
     - Co-working office access in Lisbon
   linkedin: https://www.linkedin.com/company/uniplaces/jobs/
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: Steward
   url: https://steward1.homerun.co/
@@ -529,64 +638,130 @@
     - Fintech
     - Agriculture
   linkedin: https://www.linkedin.com/company/go-steward/jobs/
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: GiveDirectly
   url: https://job-boards.greenhouse.io/givedirectly
   status: hiring
   location: USA, UK, Kenya
+  positions:
+    - title: Senior Software Engineer (Fundraising)
+      url: https://job-boards.greenhouse.io/givedirectly/jobs/4738257005
+      tags:
+        - Laravel
+        - PHP
+        - WordPress
+        - JavaScript
   industries:
     - Nonprofit
   benefits:
     - Benefits stipend
   linkedin: https://www.linkedin.com/company/givedirectly/jobs/
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: CoinsPaid
   url: https://jobs.eu.lever.co/coinspaid
   status: hiring
   location: Europe
+  positions:
+    - title: Senior PHP Backend Engineer
+      url: https://jobs.eu.lever.co/coinspaid/26722aa2-0788-4cd5-94af-9030c3bdb7ca
+      tags:
+        - PHP
+        - Laravel
+        - MySQL
+        - PostgreSQL
+        - Docker
+        - Kubernetes
   industries:
     - Crypto Payments
   benefits:
     - Flexible budget for sports, mental health, coworking or home office
   linkedin: https://www.linkedin.com/company/coinspaid-com/jobs/
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: Infomediji
   url: https://infomedijidoo.recruitee.com/
   status: hiring
+  positions:
+    - title: Backend Technical Lead (Golang/PHP)
+      url: https://infomedijidoo.recruitee.com/o/backend-technical-lead-golangphp
+      tags:
+        - Go
+        - PHP
   industries:
     - Spatial Interactive Media
   linkedin: https://www.linkedin.com/company/infomediji/jobs/
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: CyberArrow
   url: https://jobs.cyberarrow.io/
   status: hiring
   location: Portugal, Romania, Nepal
+  positions:
+    - title: Laravel Developer
+      url: https://jobs.cyberarrow.io/o/software-engineer-remote-2-3
+      tags:
+        - Laravel
+        - PHP
+        - JavaScript
+    - title: Moodle Developer (Portugal)
+      url: https://jobs.cyberarrow.io/o/moodle-developer-remote-2
+      tags:
+        - PHP
+        - MySQL
+        - JavaScript
+    - title: Moodle Developer (Spain)
+      url: https://jobs.cyberarrow.io/o/moodle-developer-remote
+      tags:
+        - PHP
+        - MySQL
+        - JavaScript
   industries:
     - Cybersecurity
     - Compliance
   linkedin: https://www.linkedin.com/company/cyberarrow/jobs/
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: JobLeads
   url: https://www.jobleads.com/careers-at-jobleads
   status: hiring
   location: Europe
+  positions:
+    - title: Senior PHP Developer
+      url: https://jobleads.jobs.personio.de/job/2269519
+      tags:
+        - Symfony
+        - PHP
+        - MySQL
+        - AI
+    - title: Senior Full Stack Developer (PHP)
+      url: https://jobleads.jobs.personio.de/job/2349512
+      tags:
+        - Symfony
+        - PHP
+        - Vue
+        - MySQL
+        - AI
   industries:
     - Recruitment Platform
   benefits:
     - Choice of work equipment
   linkedin: https://www.linkedin.com/company/jobleads-gmbh/jobs/
   glassdoor: https://www.glassdoor.com/Overview/Working-at-JobLeads-EI_IE1036477.11,19.htm
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: Eventhub
   url: https://hr.eventhubhq.com/
   status: hiring
   location: Europe/Berlin time zone
+  positions:
+    - title: Senior Fullstack PHP/Laravel Developer
+      url: https://hr.eventhubhq.com/jobs/2
+      tags:
+        - Laravel
+        - PHP
+        - JavaScript
   industries:
     - Sports
     - Events
@@ -595,34 +770,69 @@
     - Claude Code licenses
     - Opportunities to attend sporting events
   linkedin: https://www.linkedin.com/company/eventhubgmbh/jobs/
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: team.blue
   url: https://careers.team.blue/
   status: hiring
   location: Italy, Bulgaria, Spain, Portugal, Netherlands
+  positions:
+    - title: PHP (Symfony) Software Engineer
+      url: https://careers.team.blue/jobs/8585325-php-symfony-software-engineer
+      tags:
+        - Symfony
+        - PHP
+        - MySQL
+        - PostgreSQL
+        - Elasticsearch
+        - Kubernetes
   industries:
     - Web Hosting
     - Cloud
     - SaaS
   linkedin: https://www.linkedin.com/company/teamblue/jobs/
   glassdoor: https://www.glassdoor.com/Overview/Working-at-team-blue-EI_IE4686323.11,20.htm
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: OLX
   url: https://careers.olxgroup.com/jobs/
   status: hiring
   location: Portugal, Poland
+  positions:
+    - title: Staff Backend Software Engineer (Portugal)
+      url: https://jobs.eu.lever.co/olx/460655c1-7e11-49e8-b8a2-eca7c7ed3008
+      tags:
+        - Go
+        - Java
+        - PHP
+        - AWS
+        - AI
+    - title: Staff Backend Software Engineer (Poland)
+      url: https://jobs.eu.lever.co/olx/c405a50c-8236-406f-b7d1-b3160f7c2644
+      tags:
+        - Go
+        - Java
+        - PHP
+        - AWS
+        - AI
   industries:
     - Online Marketplaces
   linkedin: https://www.linkedin.com/company/olx-group/jobs/
   glassdoor: https://www.glassdoor.com/Overview/Working-at-OLX-Group-EI_IE517166.11,20.htm
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: EXADS
-  url: https://www.exads.com/exads-careers
+  url: https://www.exogroup.com/careers/
   status: hiring
   location: Portugal
+  positions:
+    - title: Systems Engineer (PHP web servers)
+      url: https://www.exogroup.com/careers/8574313-systems-engineer-full-remote/
+      tags:
+        - PHP
+        - DevOps
+        - Redis
+        - ClickHouse
   industries:
     - Ad Tech
   benefits:
@@ -630,32 +840,49 @@
     - Team buildings abroad
   linkedin: https://www.linkedin.com/company/exads/jobs/
   glassdoor: https://www.glassdoor.com/Overview/Working-at-EXADS-EI_IE2158825.11,16.htm
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: Vaste
   url: https://app.vaste.bio/careers
   status: hiring
   location: UK
+  positions:
+    - title: Laravel Developer (part-time)
+      url: https://app.vaste.bio/careers/laravel-developer
+      tags:
+        - Laravel
+        - PHP
+        - PostgreSQL
+        - AI
   industries:
     - Waste Management
     - Compliance
     - SaaS
   linkedin: https://www.linkedin.com/company/vastexchange/jobs/
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: Fans API
   url: https://fansapi.notion.site/Senior-Full-Stack-Engineer-FansAPI-com-3d12f91f226b8032ae90ca0a41c1a4a3
   status: hiring
+  positions:
+    - title: Senior Full-Stack Engineer (Laravel/React)
+      url: https://fansapi.notion.site/Senior-Full-Stack-Engineer-FansAPI-com-3d12f91f226b8032ae90ca0a41c1a4a3
+      tags:
+        - Laravel
+        - PHP
+        - Inertia
+        - React
+        - AI
   industries:
     - Developer Tools
     - API
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21
 
 - name: ClickGo
   url: https://clickgo.com/
-  status: hiring
+  status: no-active-openings
   industries:
     - Affiliate Marketing
     - Ad Tech
   linkedin: https://www.linkedin.com/company/clickgo/jobs/
-  last_verified: 2026-11-10
+  last_verified: 2026-11-21

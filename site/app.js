@@ -5,6 +5,7 @@ const HIRING = 'hiring';
 const STATUS_BADGES = { [HIRING]: 'Hiring now', [NO_OPENINGS]: 'No openings' };
 const STATUS_RANK = { [HIRING]: 0, [NO_OPENINGS]: 2 };
 const BENEFITS_PREVIEW = 3;
+const PHP_TAGS = ['PHP', 'Laravel', 'Symfony', 'WordPress', 'Magento', 'Drupal', 'Livewire', 'Filament', 'Inertia'];
 
 // Region groups a country belongs to, and the words a location uses for them.
 const GROUP_WORDS = {
@@ -105,8 +106,19 @@ function hiresIn(location, country) {
   return usTimeZone && country.groups.includes('americas');
 }
 
+const positionsOf = (company) => company.positions || [];
+const tagsOf = (company) => [...new Set(positionsOf(company).flatMap((position) => position.tags))];
+
 const searchText = (company) =>
-  [company.name, company.location || 'anywhere', ...company.industries, ...company.benefits, STATUS_BADGES[company.status] || '']
+  [
+    company.name,
+    company.location || 'anywhere',
+    ...positionsOf(company).map((position) => position.title),
+    ...tagsOf(company),
+    ...company.industries,
+    ...company.benefits,
+    STATUS_BADGES[company.status] || '',
+  ]
     .join(' ')
     .toLowerCase();
 
@@ -148,6 +160,7 @@ function readState() {
   return {
     q: (data.get('q') || '').trim(),
     country: data.get('country') || '',
+    tag: data.get('tag') || '',
     industry: data.get('industry') || '',
     status: data.get('status') || '',
     sort: data.get('sort') || DEFAULT_SORT,
@@ -159,6 +172,7 @@ function writeState(state) {
   const params = new URLSearchParams();
   if (state.q) params.set('q', state.q);
   if (state.country) params.set('country', state.country);
+  if (state.tag) params.set('tag', state.tag);
   if (state.industry) params.set('industry', state.industry);
   if (state.status) params.set('status', state.status);
   if (state.sort !== DEFAULT_SORT) params.set('sort', state.sort);
@@ -177,6 +191,7 @@ function restoreState() {
   // Older links used "region"; keep them working when it names a country.
   const country = params.get('country') || params.get('region') || '';
   setCountry(country);
+  form.tag.value = params.get('tag') || '';
   form.industry.value = params.get('industry') || '';
   let status = params.get('status') || '';
   if (params.get('hiring') === '1' || params.get('open') === '1') status = 'hiring';
@@ -186,7 +201,7 @@ function restoreState() {
 }
 
 function activeFilterCount(state) {
-  return [state.q, state.country, state.industry, state.status, state.recent].filter(Boolean).length;
+  return [state.q, state.country, state.tag, state.industry, state.status, state.recent].filter(Boolean).length;
 }
 
 // ---- Options ---------------------------------------------------------------
@@ -198,6 +213,19 @@ function fillIndustries(companies) {
   }
   const names = [...counts.keys()].sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
   for (const name of names) form.industry.append(new Option(`${name} (${counts.get(name)})`, name));
+}
+
+function fillTags(companies) {
+  const counts = new Map();
+  for (const company of companies) {
+    for (const tag of tagsOf(company)) counts.set(tag, (counts.get(tag) || 0) + 1);
+  }
+  // PHP and its frameworks first, then the rest of the stack, most common first.
+  const rank = (tag) => (PHP_TAGS.includes(tag) ? PHP_TAGS.indexOf(tag) : PHP_TAGS.length);
+  const names = [...counts.keys()].sort(
+    (a, b) => rank(a) - rank(b) || counts.get(b) - counts.get(a) || a.localeCompare(b, undefined, { sensitivity: 'base' }),
+  );
+  for (const name of names) form.tag.append(new Option(`${name} (${counts.get(name)})`, name));
 }
 
 // ---- Searchable country picker ---------------------------------------------
@@ -426,7 +454,7 @@ function renderCard(company, state) {
     name.href = company.url;
     openRoles.href = company.url;
     openRoles.setAttribute('aria-label', `Open roles at ${company.name}`);
-    if (company.status === HIRING) openRoles.querySelector('.label').textContent = 'See open roles';
+    if (company.status === HIRING) openRoles.querySelector('.label').textContent = positionsOf(company).length ? 'Careers page' : 'See open roles';
   } else {
     openRoles.remove();
   }
@@ -446,6 +474,39 @@ function renderCard(company, state) {
   } else {
     location.textContent = 'Remote: anywhere';
     location.title = 'No region limit listed';
+  }
+
+  const positions = card.querySelector('.positions');
+  for (const position of positionsOf(company)) {
+    if (!isSafeUrl(position.url)) continue;
+    const item = document.createElement('li');
+    item.className = 'position';
+    const link = document.createElement('a');
+    link.className = 'position-link';
+    link.href = position.url;
+    link.target = '_blank';
+    link.rel = 'noopener';
+    link.textContent = position.title;
+    link.title = `Open the job post: ${position.title} at ${company.name}`;
+    const arrow = document.createElement('span');
+    arrow.className = 'arrow';
+    arrow.setAttribute('aria-hidden', 'true');
+    arrow.textContent = '↗';
+    link.append(' ', arrow);
+    const tags = document.createElement('span');
+    tags.className = 'tags';
+    for (const tag of position.tags) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'tag';
+      button.textContent = tag;
+      button.dataset.tag = tag;
+      button.title = `Show only ${tag} roles`;
+      if (state.tag === tag) button.setAttribute('aria-pressed', 'true');
+      tags.append(button);
+    }
+    item.append(link, tags);
+    positions.append(item);
   }
 
   const chips = card.querySelector('.chips');
@@ -539,6 +600,7 @@ function render(companies) {
   const terms = state.q.toLowerCase().split(/\s+/).filter(Boolean);
   const visible = companies
     .filter((company) => !country || hiresIn(company.location, country))
+    .filter((company) => !state.tag || tagsOf(company).includes(state.tag))
     .filter((company) => !state.industry || company.industries.includes(state.industry))
     .filter((company) => state.status !== 'hiring' || company.status === HIRING)
     .filter((company) => state.status !== 'closed' || company.status === NO_OPENINGS)
@@ -550,7 +612,7 @@ function render(companies) {
   const shown = visible.length === companies.length
     ? `${companies.length} companies`
     : `${visible.length} of ${companies.length} companies`;
-  const where = country ? ` that hire in ${country.name}` : '';
+  const where = `${state.tag ? ` with ${state.tag} roles` : ''}${country ? ` that hire in ${country.name}` : ''}`;
   summary.replaceChildren();
   const strong = document.createElement('strong');
   strong.textContent = shown;
@@ -581,6 +643,13 @@ function scrollToResults() {
 
 function setupResultsClicks() {
   results.addEventListener('click', (event) => {
+    const tag = event.target.closest('.tag');
+    if (tag) {
+      form.tag.value = form.tag.value === tag.dataset.tag ? '' : tag.dataset.tag;
+      form.dispatchEvent(new Event('input'));
+      scrollToResults();
+      return;
+    }
     const chip = event.target.closest('.chip');
     if (chip) {
       form.industry.value = form.industry.value === chip.dataset.industry ? '' : chip.dataset.industry;
@@ -715,6 +784,7 @@ async function main() {
     const companies = (await response.json()).map((company) => ({ ...company, search: searchText(company) }));
 
     fillStats(companies);
+    fillTags(companies);
     fillIndustries(companies);
     setupCountryPicker(companies);
     restoreState();

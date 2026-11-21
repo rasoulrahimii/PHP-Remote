@@ -82,7 +82,7 @@
           <span class="field-label">Search</span>
           <span class="input-wrap">
             <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-            <input type="search" name="q" placeholder="Company, industry or benefit" autocomplete="off" aria-keyshortcuts="/">
+            <input type="search" name="q" placeholder="Company, role, stack or benefit" autocomplete="off" aria-keyshortcuts="/">
             <kbd class="shortcut" aria-hidden="true">/</kbd>
           </span>
         </label>
@@ -113,6 +113,12 @@
           <label><input type="radio" name="status" value="hiring"><span><i class="dot" aria-hidden="true"></i>Hiring now</span></label>
           <label><input type="radio" name="status" value="closed"><span>No openings</span></label>
         </fieldset>
+        <label class="field compact">
+          <span class="field-label">Stack</span>
+          <select name="tag">
+            <option value="">Any stack</option>
+          </select>
+        </label>
         <label class="field compact">
           <span class="field-label">Industry</span>
           <select name="industry">
@@ -230,6 +236,7 @@
         </div>
         <span class="status" hidden></span>
       </div>
+      <ul class="positions" aria-label="Open roles"></ul>
       <ul class="chips"></ul>
       <ul class="benefits"></ul>
       <div class="card-foot">
